@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=changeme
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - es-network
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=153515
+      - POSTGRES_DB=workshop
+    ports:
+      - "4321:4321"
+    networks:
+      - es-network
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+networks:
+  es-network:
+    driver: bridge
+
+volumes:
+  es-data:
+    driver: local
+  postgres-data:
+    driver: local
